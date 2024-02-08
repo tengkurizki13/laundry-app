@@ -1,0 +1,18 @@
+[
+  {
+    "username": "rizki",
+    "email": "trizkidinelvipratama@gmail.com",
+    "password": "12345",
+    "role": "admin",
+    "phoneNumber": "083243245",
+    "address": "jln.lintas timur"
+  },
+  {
+    "username": "bejo",
+    "email": "bejo@gmail.com",
+    "password": "12345",
+    "role": "customer",
+    "phoneNumber": "083243245",
+    "address": "jln.lintas timur"
+  }
+]
