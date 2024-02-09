@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Request.belongsTo(models.User, { foreignKey: "userId" });
+      Request.hasMany(models.Track, { foreignKey: "requestId" });
     }
 
   }
@@ -41,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.ENUM('proses', 'penjemputan','penimbangan','pencucian','pengeringan','pengemasan','pembayaran','selesai'),
+        type: DataTypes.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
         defaultValue: "proses",
       },
       userId: {

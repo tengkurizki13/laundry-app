@@ -2,6 +2,7 @@ import {
   BASE_URL,
   REQUESTS_BY_ID_FETCH_SUCCESS,
   REQUESTS_FETCH_SUCCESS,
+  TRACKS_FETCH_SUCCESS,
 } from "./actionType";
 import Swal from 'sweetalert2';
 
@@ -20,6 +21,14 @@ export const requestByidFetchSuccess = (payload) => {
     payload: payload,
   };
 };
+
+export const tracksFetchSuccess = (payload) => {
+  return {
+    type: TRACKS_FETCH_SUCCESS,
+    payload: payload,
+  };
+};
+
 
 
 // fucntions api to server
@@ -168,6 +177,32 @@ export const loginHandler = (form) => {
 
       // dispatch error
       dispatch(error);
+    }
+  };
+};
+
+
+export const fetchTracks = (id) => {
+  return async (dispatch) => {
+    try {
+      // api
+      const response = await fetch(BASE_URL + "/api/tracks/" + id, {
+        headers: {
+          access_token : localStorage.getItem('access_token') // Menggunakan token akses yang telah Anda miliki
+        }
+      });
+
+      // contional if error
+      if (!response.ok) throw new Error("upss something wrong");
+      
+      // change data to json
+      let data = await response.json();
+
+      // call other fuction
+      dispatch(tracksFetchSuccess(data.data));
+    } catch (error) {
+      // log error
+      console.log(error);
     }
   };
 };

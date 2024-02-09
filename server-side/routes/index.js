@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userRoutes = require("./userRoutes");
 const requestRoutes = require("./requestRoutes");
+const trackRoutes = require("./trackRoutes");
 const userRequestRoutes = require("./userRequestRoutes");
 const authentication = require("../middleware/authentication");
 
@@ -12,6 +13,7 @@ router.get("/", (req, res) => {
 router.use(userRoutes);
 router.use(authentication);
 router.use(requestRoutes);
+router.use(trackRoutes);
 router.use(userRequestRoutes);
 
 const errorHandler = (error, req, res, next) => {

@@ -1,29 +1,13 @@
-"use strict";
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Requests", {
+    await queryInterface.createTable('Tracks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      item: {
-        type: Sequelize.JSON,
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      scale: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
-        defaultValue: 'proses', 
+        type: Sequelize.INTEGER
       },
       userId: {
         type: Sequelize.INTEGER,
@@ -37,17 +21,33 @@ module.exports = {
         onDelete: "cascade",
         onUpdate: "cascade",
       },
+      requestId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: "Requests",
+          },
+          key: "id",
+        },
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      },
+      status: {
+        type: Sequelize.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
+        defaultValue: 'proses', 
+      },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Requests");
-  },
+    await queryInterface.dropTable('Tracks');
+  }
 };

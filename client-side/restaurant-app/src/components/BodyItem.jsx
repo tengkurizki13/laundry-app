@@ -13,6 +13,8 @@ function BodyItem({request}) {
     navigate("/requests/"+ request.id)
   }
 
+  console.log(request.createdAt);
+
     return <div className='shadow p-3 mb-5 bg-body rounded cardItem ms-2'>
              <div className="card" >
               <div className="card-body">
