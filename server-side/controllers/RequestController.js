@@ -56,52 +56,18 @@ class RequestController {
     }
   }
 
-  static async userRequests(req, res, next) {
-    
-    try {
-      let option = {
-        include: [
-          {
-            model: Request,
-            where: { userId : req.user.id }
-          },
-        ],
-        attributes: {
-          exclude: ["password"],
-        },
-      };
-
-
-      let userRequest = await User.findAll(option);
-
-      if (!userRequest) throw { name: "notFound" };
-
-      res.status(200).json({
-        message: "detail userRequest",
-        data: userRequest,
-      });
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  }
-
   static async requestAdd(req, res, next) {
     try {
       const {
-        item,
-        price,
         scale,
-        status,
-        userId = req.user.id,
+        price,
+        userId
       } = req.body;
       
 
       let newRequest = await Request.create({
-        item,
-        price,
         scale,
-        status,
+        price,
         userId
       });
 
@@ -145,11 +111,10 @@ class RequestController {
       const { id } = req.params;
 
       const {
-        item,
-        price,
         scale,
+        price,
         status,
-        userId = req.user.id,
+        userId,
       } = req.body;
 
       let request = await Request.findByPk(id);
@@ -161,9 +126,8 @@ class RequestController {
       };
 
       await Request.update({
-        item,
-        price,
         scale,
+        price,
         status,
         userId
       },option);

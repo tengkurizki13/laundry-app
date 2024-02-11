@@ -1,31 +1,73 @@
 const { User } = require("../models");
-const { comparePassword } = require("../helpers/bcryptjs");
-const { encodedJson } = require("../helpers/webToken");
 
 class UserController {
-  static async register(req, res, next) {
+  static async users(req, res, next) {
     try {
-      const { username, email, password, phoneNumber, address,role = 'customer' } = req.body;
-      // create new User
-      let newUser = await User.create({
-        username,
-        email,
-        password,
-        role,
-        phoneNumber,
-        address
+
+      let option = {
+        order: [["id", "ASC"]],
+        where: {role : 'customer'},
+        attributes: {
+            exclude: ["password"],
+          },
+      };
+
+
+      let users = await User.findAll(option);
+
+
+      res.status(200).json({
+        message: "all users",
+        data: users,
       });
-      
-      // contional get
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async userById(req, res, next) {
+    try {
+      const { id } = req.params;
       let option = {
         attributes: {
           exclude: ["password"],
         },
-    };
-      // query get user has been created
-      let user = await User.findByPk(newUser.id, option);
+      };
+      let user = await User.findByPk(id, option);
+
+      if (!user) throw { name: "notFound" };
+
+      res.status(200).json({
+        message: "detail user",
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async userAdd(req, res, next) {
+    try {
+      const {
+        username,
+        phoneNumber,
+      } = req.body;
       
-      // response success
+
+      let newUser = await User.create({
+        username,
+        phoneNumber,
+      });
+
+      let option = {
+        attributes: {
+          exclude: ["password"],
+        },
+      };
+
+      let user = await User.findByPk(newUser.id,option);
+  
       res.status(201).json(
         {
           message: "User has been created successfully",
@@ -33,59 +75,66 @@ class UserController {
         },
       );
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
 
-  static async login(req, res, next) {
+  static async userDelete(req, res, next) {
     try {
-      // req.body
-      const { email, password } = req.body;
+      const { id } = req.params;
 
-      // validation for empty email or password
-      if (!email || !password  ) throw { name: "Bad Request" };
+      if (Number(id) === 1 || Number(id) === 2) throw { name: "forbidden" };
 
-      // query findone to db
-      let user = await User.findOne({
-        where: { email },
-      });
+      let user = await User.findByPk(id);
 
-      // check authentication
-      if (!user) throw { name: "authentication" };
+      if (!user) throw { name: "notFound" };
 
-      // compore password hash
-      let isvalidPass = await comparePassword(password, user.password);
+      await user.destroy({ where: { id } });
 
-
-      // check authentication
-      if (!isvalidPass) throw { name: "authentication" };
-
-      // make paylod for token
-      let payload = {
-        id: user.id,
-      };
-
-      //  make token
-      payload = encodedJson(payload);
-
-      // response success
       res.status(200).json(
         {
-          message: "User has been logged in",
-          data : {
-            access_token: payload,
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            role: user.role,
-          }
+          massage: `user with id ${user.id} success to delete`,
         },
       );
     } catch (error) {
-    // next error to error handler
       next(error);
     }
   }
+
+  static async userUpdate(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      if (Number(id) === 1 || Number(id) === 2) throw { name: "forbidden" };
+
+      const {
+        username,
+        phoneNumber,
+      } = req.body;
+
+      let user = await User.findByPk(id);
+
+      if (!user) throw { name: "notFound" };
+
+      let option = {
+            where: { id }
+      };
+
+      await user.update({
+        username,
+        phoneNumber,
+      },option);
+
+      res.status(200).json({
+        massage: `user success to update`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+
 }
 
 module.exports = UserController;

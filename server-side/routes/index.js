@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const userRoutes = require("./userRoutes");
+const authRoutes = require("./authRoutes");
 const requestRoutes = require("./requestRoutes");
 const trackRoutes = require("./trackRoutes");
-const userRequestRoutes = require("./userRequestRoutes");
 const authentication = require("../middleware/authentication");
 
-router.get("/", (req, res) => {
+router.post("/", (req, res) => {
   res.send("ok");
 });
 
-router.use(userRoutes);
+router.use(authRoutes);
 router.use(authentication);
+router.use(userRoutes);
 router.use(requestRoutes);
 router.use(trackRoutes);
-router.use(userRequestRoutes);
 
 const errorHandler = (error, req, res, next) => {
   let status = 500;
@@ -23,35 +23,31 @@ const errorHandler = (error, req, res, next) => {
     case "SequelizeValidationError":
     case "SequelizeUniqueConstraintError":
       status = 400;
-      message = error.errors.map((e) => {
-        return e.message;
-      });
+      message = error.errors[0].message
       break;
     case "ValidationErrorName":
       status = 400;
-      message = error.error.errors.map((e) => {
-        return e.message;
-      });
+      message = error.errors[0].message
       break;
     case "Bad Request":
       status = 400;
-      message = "email / password is required";
+      message = "username / password kosong";
       break;
     case "authentication":
       status = 401;
-      message = "you are not authentication";
+      message = "kamu belum authentikasi";
       break;
     case "authorized":
       status = 401;
-      message = "you are not authorizetion";
+      message = "kamu tidak punya akses";
       break;
     case "forbidden":
       status = 403;
-      message = "forbidden";
+      message = "dilarang";
       break;
     case "notFound":
       status = 404;
-      message = "data is not found";
+      message = "data tidak ditemukan";
       break;
     default:
       status = 500;

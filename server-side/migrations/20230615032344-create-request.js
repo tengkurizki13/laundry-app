@@ -9,16 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      item: {
-        type: Sequelize.JSON,
+      scale: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       price: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      scale: {
-        type: Sequelize.STRING,
         allowNull: false,
       },
       status: {

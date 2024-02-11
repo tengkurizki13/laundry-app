@@ -1,9 +1,10 @@
 import {  useState,useEffect } from 'react'
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { addRequestHandler } from '../store/actions/actionCreator';
+import { updateRequestHandler, fetchRequestById } from '../store/actions/actionCreator';
 import { fetchUsers } from '../store/actions/actionCreator';
 import Select from 'react-select';
+import { useParams } from 'react-router-dom';
 
 
 // fuction for login
@@ -11,9 +12,12 @@ function FormAddPage() {
   // define fuction needed for action
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  let { id } = useParams();
   // state
   const[loading,setLoading] = useState(true)
+  const {request} = useSelector(((state) => state.request))
   const {users} = useSelector(((state) => state.user))
+  const [selectedUser, setSelectedUser] = useState(null);
   const [data, setData] = useState({
     scale:0,
     price:0,
@@ -22,12 +26,29 @@ function FormAddPage() {
 
    // function page reload first time and once
    useEffect(() => {
-    dispatch(fetchUsers())
+    dispatch(fetchRequestById(id))
+    .then(() => {
+      dispatch(fetchUsers())
       .then(() => {
         setLoading(false)
       })
+    })
     },[])
+       
+    useEffect(() => {
+      setData({
+        scale: request.scale, // Convert scale to string
+        price: request.price, // Convert price to string
+        userId: request.userId // Convert userId to string
+      });
+    },[request])
 
+    useEffect(() => {
+      if (users.length > 0) {
+        const selectedUser = users.find(user => user.id === request.userId);
+        setSelectedUser({ value: selectedUser.id, label: selectedUser.username });
+      }
+    },[request,users])
 
 
   // function fon handle change value from input form and execute every changing
@@ -43,18 +64,22 @@ function FormAddPage() {
   // function fon handle submit  form and execute every button submit clicking
   function handleSubmit(e) {
     e.preventDefault();
-
     // dispatch and call handler or other fucntion for query to server
-    dispatch(addRequestHandler(data))
+    dispatch(updateRequestHandler(data))
       .then(() => {
         // move to router / if successfully
           navigate("/")
       })
       .catch(() => {
         // stay in this page
-        navigate("/form-add")
+        navigate("/form-edit/" +id)
       })
   }
+
+  const handleUserChange = selectedOption => {
+    setData({ ...data, userId: selectedOption.value });
+    setSelectedUser(selectedOption);
+  };
 
     // contional if data not relode yet
     if (loading) {
@@ -67,7 +92,7 @@ function FormAddPage() {
       <div className="row mt-5">
         <div className="col-4"></div>
         <div className="col-4">
-        <h1 className='text-center fw-bold fst-italic'>Form Menambah Pesanan</h1>
+        <h1 className='text-center fw-bold fst-italic'>Form Mengedit Pesanan</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-2">
             <label className="form-label fst-italic">Total Timbangan</label>
@@ -82,11 +107,12 @@ function FormAddPage() {
           <div className="mb-2">
             <label className="form-label fst-italic">pilih user</label>
             <Select
-              className="form-select"
-              aria-label="Default select example"
-              options={users.map(user => ({ value: user.id, label: user.username }))}
-              onChange={selectedOption => setData({ ...data, userId: selectedOption.value })}
-/>
+                className="form-select"
+                aria-label="Default select example"
+                options={users.map(user => ({ value: user.id, label: user.username }))}
+                value={selectedUser}
+                onChange={handleUserChange}
+              />
           </div>
 
          

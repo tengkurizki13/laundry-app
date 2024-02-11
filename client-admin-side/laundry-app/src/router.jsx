@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage.jsx";
 import DetailPage from "./pages/DetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import FormAddPage from "./pages/FormAddPage.jsx";
+import FormEditPage from "./pages/FormEditPage.jsx";
 
   const router = createBrowserRouter([
     {
@@ -62,6 +63,19 @@ import FormAddPage from "./pages/FormAddPage.jsx";
             {
               path:"/form-add",
               element: <FormAddPage />,
+              loader: async () => {
+                // check token
+                if (!localStorage.access_token) {
+                  // redirect to login
+                    return redirect("/login")
+                }else{
+                    return null
+                }
+              },
+            },
+            {
+              path:"/form-edit/:id",
+              element: <FormEditPage />,
               loader: async () => {
                 // check token
                 if (!localStorage.access_token) {

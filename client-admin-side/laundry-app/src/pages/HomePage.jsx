@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRequests } from '../store/actions/actionCreator';
+import { fetchRequests,deleteRequestHandler} from '../store/actions/actionCreator';
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 // fuction for home page
 function HomePage() {
@@ -24,10 +25,49 @@ function HomePage() {
       })
     },[])
     
-  function changePage(form){
-    console.log(form,"inid i");
-    navigate("/form-add")
+  function changePage(form,id){
+    console.log(id,"hhoem");
+    if (form == "add") {
+      navigate("/form-add")
+    }else if (form == "edit") {
+      navigate("/form-edit/" + id)
+    }else{
+      navigate("/")
+    }
   }
+
+  function handleDelete(id){
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteRequestHandler(id))
+        .then(() => {
+          dispatch(fetchRequests())
+          .then(() => {
+            setLoading(false)
+          })
+          navigate("/")
+        })
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+      }
+    });
+   
+  }
+
+  console.log(requests);
+
+
   // contional if data not relode yet
   if (loading) {
     return <h1>memuat...</h1>
@@ -88,8 +128,8 @@ function HomePage() {
                     </td>
 
                     <td>
-                      <button className='btn btn-danger me-3'><i className="bi bi-trash"></i></button>
-                      <button className='btn btn-warning me-3'><i className="bi bi-pencil"></i></button>
+                      <button className='btn btn-danger me-3' onClick={() => handleDelete(request.id)}><i className="bi bi-trash"></i></button>
+                      <button className='btn btn-warning me-3' onClick={() => {changePage("edit",request.id)}}><i className="bi bi-pencil"></i></button>
                       <button className='btn btn-secondary'><i className="bi bi-ticket-detailed"></i></button>
                     </td>
                   </tr>

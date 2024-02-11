@@ -4,7 +4,6 @@ const fs = require("fs");
 
 let data = JSON.parse(fs.readFileSync("./data/requests.json", "utf-8")).map(
   (request) => {
-    request.item = JSON.stringify(request.item)
     request.createdAt = new Date();
     request.updatedAt = new Date();
     return request;

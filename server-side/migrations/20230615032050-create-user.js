@@ -11,27 +11,21 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING,
-      },
-      email: {
-        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      role: {
-        type: Sequelize.ENUM('admin', 'customer'),
         defaultValue: 'customer', 
       },
       phoneNumber: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
-      address: {
+      role: {
         type: Sequelize.STRING,
-        allowNull: false,
+        defaultValue: 'customer', 
       },
       createdAt: {
         allowNull: false,

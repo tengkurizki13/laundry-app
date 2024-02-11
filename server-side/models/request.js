@@ -17,28 +17,30 @@ module.exports = (sequelize, DataTypes) => {
   }
   Request.init(
     {
-      item: {
-        type: DataTypes.JSON,
+      scale: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "Item is Required" },
-          notNull: { msg: "Item is Required" },
+          notEmpty: { msg: "Berat Timbangan Kosong" },
+          notNull: { msg: "Berat Timbangan Kosong" },
+          notZero(value) {
+            if (Number(value) <= 0) {
+              throw new Error("Total Timbangan tidak boleh kosong atau minus");
+            }
+          }
         },
       },
       price: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "Price is Required" },
-          notNull: { msg: "Price is Required" },
-        },
-      },
-      scale: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: { msg: "Scale is Required" },
-          notNull: { msg: "Scale is Required" },
+          notEmpty: { msg: "Harga Kosong" },
+          notNull: { msg: "Harga Kosong" },
+          notZero(value) {
+            if (Number(value) <= 0) {
+              throw new Error("Total Harga tidak boleh kosong atau minus");
+            }
+          }
         },
       },
       status: {
@@ -49,8 +51,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          notEmpty: { msg: "UserId is Required" },
-          notNull: { msg: "UserId is Required" },
+          notEmpty: { msg: "UserName Kosong" },
+          notNull: { msg: "UserName Kosong" },
+          notZero(value) {
+            if (Number(value) <= 0) {
+              throw new Error("Username tidak boleh Kosong");
+            }
+          }
         },
         references: {
           model: {

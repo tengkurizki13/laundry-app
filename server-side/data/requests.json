@@ -1,23 +1,20 @@
 [
   {
-    "item": ["baju","celana"],
     "price": 30000,
-    "scale": "1,3",
+    "scale": 2,
     "status": "proses",
-    "userId": 2
+    "userId": 3
   },
   {
-    "item": ["baju","celana"],
     "price": 30000,
-    "scale": "1,3",
+    "scale": 2,
     "status": "penimbangan",
-    "userId": 2
+    "userId": 3
   },
   {
-    "item": ["baju","celana"],
     "price": 30000,
-    "scale": "1,3",
+    "scale": 2,
     "status": "pencucian",
-    "userId": 2
+    "userId": 3
   }
 ]

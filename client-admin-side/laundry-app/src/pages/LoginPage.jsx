@@ -11,7 +11,7 @@ function LoginPage() {
   const dispatch = useDispatch()
   // state
   const [data, setData] = useState({
-    email:"",
+    username:"",
     password:"",
   })
 
@@ -51,8 +51,8 @@ function LoginPage() {
         <form onSubmit={handleSubmit}>
           {/* email input */}
           <div className="mb-2">
-            <label className="form-label fst-italic">your email</label>
-            <input type="email" name='email' id='email' className="form-control shadow p-3 bg-body rounded" value={data.email} onChange={(e) => handleChange(e)}/>
+            <label className="form-label fst-italic">your username</label>
+            <input type="text" name='username' id='username' className="form-control shadow p-3 bg-body rounded" value={data.username} onChange={(e) => handleChange(e)}/>
           </div>
           {/* passwordinput */}
           <div className="mb-2">

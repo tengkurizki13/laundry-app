@@ -19,52 +19,29 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: { msg: "Username sudah ada" },
         validate: {
-          notEmpty: { msg: "Username is Required" },
-          notNull: { msg: "Username is Required" },
-        },
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: { msg: "Email Must Be Unique" },
-        validate: {
-          notEmpty: { msg: "Email is Required" },
-          notNull: { msg: "Email is Required" },
-          isEmail: { msg: "Email Wrong Format" },
+          notEmpty: { msg: "Username Kosong" },
+          notNull: { msg: "Username Kosong" },
         },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: { msg: "Password is Required" },
-          notNull: { msg: "Password is Required" },
-          min: {
-            args: 5,
-            msg: "Minimum Password Length Is 5 Word",
-          },
-        },
-      },
-      role: {
-        type: DataTypes.ENUM('admin', 'customer'),
-        defaultValue: "customer",
+        defaultValue: 'customer', 
       },
       phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: { msg: "No Whatapp sudah ada" },
         validate: {
-          notEmpty: { msg: "Phone Number is Required" },
-          notNull: { msg: "Phone Number is Required" },
+          notEmpty: { msg: "No Whatapp Kosong" },
+          notNull: { msg: "No Whatapp Kosong" },
         },
       },
-      address: {
+      role: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: { msg: "Address is Required" },
-          notNull: { msg: "Address is Required" },
-        },
+        defaultValue: "customer",
       },
     },
     {
