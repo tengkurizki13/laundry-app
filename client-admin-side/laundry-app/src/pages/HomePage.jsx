@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRequests,deleteRequestHandler} from '../store/actions/actionCreator';
+import { fetchRequests,deleteRequestHandler,updateStatusRequestHandler} from '../store/actions/actionCreator';
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -16,7 +16,6 @@ function HomePage() {
   // states
   const[loading,setLoading] = useState(true)
   const {requests} = useSelector(((state) => state.request))
-
   // function page reload first time and once
   useEffect(() => {
     dispatch(fetchRequests())
@@ -25,8 +24,7 @@ function HomePage() {
       })
     },[])
     
-  function changePage(form,id){
-    console.log(id,"hhoem");
+  function changePageToForm(form,id){
     if (form == "add") {
       navigate("/form-add")
     }else if (form == "edit") {
@@ -35,6 +33,26 @@ function HomePage() {
       navigate("/")
     }
   }
+
+  function changePageToDetail(id){
+      navigate("/requests/"+id)
+  }
+
+  function handleChangeStatus(id,e){
+    // Mengubah status dalam state data
+
+   let data = {
+    status : e.target.value
+   }
+
+    dispatch(updateStatusRequestHandler(data,id))
+    .then(() => {
+      dispatch(fetchRequests())
+      .then(() => {
+        setLoading(false)
+      })
+    })
+}
 
   function handleDelete(id){
     Swal.fire({
@@ -67,7 +85,6 @@ function HomePage() {
 
   console.log(requests);
 
-
   // contional if data not relode yet
   if (loading) {
     return <h1>memuat...</h1>
@@ -86,14 +103,17 @@ function HomePage() {
                       Filter Data
                     </button>
                     <ul className="dropdown-menu">
-                      <li><a className="dropdown-item" href="#">Action</a></li>
-                      <li><a className="dropdown-item" href="#">Another action</a></li>
-                      <li><a className="dropdown-item" href="#">Something else here</a></li>
+                      <li><a className="dropdown-item" href="#">sedang proses</a></li>
+                      <li><a className="dropdown-item" href="#">sedang Penimbangan</a></li>
+                      <li><a className="dropdown-item" href="#">sedang Pencucian</a></li>
+                      <li><a className="dropdown-item" href="#">sedang Pengeringan</a></li>
+                      <li><a className="dropdown-item" href="#">sedang Pengemasan</a></li>
+                      <li><a className="dropdown-item" href="#">sudah selesai</a></li>
                     </ul>
               </div>
             </div>
             <div className="col-6 text-end">
-                   <button className="btn btn-success shadow" onClick={() => {changePage("add")}} ><i className="bi bi-plus-circle"></i></button>
+                   <button className="btn btn-success shadow" onClick={() => {changePageToForm("add")}} ><i className="bi bi-plus-circle"></i></button>
             </div>
       </div>
     <div className='mt-3'>
@@ -117,20 +137,34 @@ function HomePage() {
                     <td>{request.id}</td>
                     {/* <td>{request.status}</td> */}
                     <td>
-                    <select className="form-select" aria-label="Default select example">
-                      <option value="proses" selected={request.status === 'proses'}>Proses</option>
-                      <option value="penimbangan" selected={request.status === 'penimbangan'}>Penimbangan</option>
-                      <option value="pencucian" selected={request.status === 'pencucian'}>Pencucian</option>
-                      <option value="pengeringan" selected={request.status === 'pengeringan'}>Pengeringan</option>
-                      <option value="pengemasan" selected={request.status === 'pengemasan'}>Pengemasan</option>
-                      <option value="selesai" selected={request.status === 'selesai'}>Selesai</option>
-                    </select>
-                    </td>
+                        {request.status === 'selesai' ? (
+                          <span style={{ color: 'green' }} className='fst-italic'>Selesai!!!</span>
+                        ) : (
+                          <select className="form-select" aria-label="Default select example" name='status' onChange={(e) => handleChangeStatus(request.id, e)}>
+                            {request.status === 'proses' ? (
+                              <option value="proses" selected={request.status === 'proses'}>Proses</option>
+                            ) : ""}
+                            {request.status === 'penimbangan' || request.status === 'proses' ? (
+                              <option value="penimbangan" selected={request.status === 'penimbangan'}>Penimbangan</option>
+                            ) : ""}
+                            {request.status === 'proses' || request.status === 'penimbangan' || request.status === 'pencucian' ? (
+                              <option value="pencucian" selected={request.status === 'pencucian'}>Pencucian</option>
+                            ) : ""}
+                            {request.status === 'proses' || request.status === 'penimbangan' || request.status === 'pencucian' || request.status === 'pengeringan' ? (
+                              <option value="pengeringan" selected={request.status === 'pengeringan'}>Pengeringan</option>
+                            ) : ""}
+                            {request.status === 'proses' || request.status === 'penimbangan' || request.status === 'pencucian' || request.status === 'pengeringan' || request.status === 'pengemasan' ?  (
+                              <option value="pengemasan" selected={request.status === 'pengemasan'}>Pengemasan</option>
+                            ) : ""}
+                            <option value="selesai" selected={request.status === 'selesai'}>Selesai</option>
+                          </select>
+                        )}
+                  </td>
 
                     <td>
                       <button className='btn btn-danger me-3' onClick={() => handleDelete(request.id)}><i className="bi bi-trash"></i></button>
-                      <button className='btn btn-warning me-3' onClick={() => {changePage("edit",request.id)}}><i className="bi bi-pencil"></i></button>
-                      <button className='btn btn-secondary'><i className="bi bi-ticket-detailed"></i></button>
+                      <button className='btn btn-warning me-3' onClick={() => {changePageToForm("edit",request.id)}}><i className="bi bi-pencil"></i></button>
+                      <button className='btn btn-secondary'><i className="bi bi-ticket-detailed" onClick={() => {changePageToDetail(request.id)}}></i></button>
                     </td>
                   </tr>
                   })}

@@ -229,13 +229,12 @@ export const deleteRequestHandler = (id) => {
 };
 
 
-export const updateRequestHandler = (form) => {
+export const updateRequestHandler = (form,id) => {
   return async (dispatch) => {
     try {
-      console.log(form);
       // api
-      const response = await fetch(BASE_URL + "/api/requests", {
-        method: "post",
+      const response = await fetch(BASE_URL + "/api/requests/" + id, {
+        method: "put",
         headers: {
           "Content-Type": "application/json",
           access_token : localStorage.getItem('access_token')
@@ -271,6 +270,49 @@ export const updateRequestHandler = (form) => {
     }
   };
 };
+
+export const updateStatusRequestHandler = (form,id) => {
+  return async (dispatch) => {
+    try {
+      // api
+      const response = await fetch(BASE_URL + "/api/requests-status/" + id, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          access_token : localStorage.getItem('access_token')
+        },
+        body: JSON.stringify(form),
+      });
+
+      // change data response to json
+      const data = await response.json();
+
+      // contional if error
+      if (!response.ok) throw new Error(data.message);
+
+      // sweet alert
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "barang berhasil di update",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      // sweet alert error
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
+
+      // dispatch error
+      dispatch(error);
+    }
+  };
+};
+
 
 
 // this fucntion api login from server
@@ -335,6 +377,8 @@ export const fetchTracks = (id) => {
       
       // change data to json
       let data = await response.json();
+
+      console.log(data, "di action");
 
       // call other fuction
       dispatch(tracksFetchSuccess(data.data));

@@ -65,7 +65,7 @@ function FormAddPage() {
   function handleSubmit(e) {
     e.preventDefault();
     // dispatch and call handler or other fucntion for query to server
-    dispatch(updateRequestHandler(data))
+    dispatch(updateRequestHandler(data,id))
       .then(() => {
         // move to router / if successfully
           navigate("/")

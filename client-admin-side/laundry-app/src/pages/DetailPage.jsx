@@ -29,7 +29,7 @@ function DetailPage() {
       }
     },[])
 
-    console.log(tracks);
+    console.log(tracks,"di page");
  
 
     // contional if data not relode yet
@@ -46,7 +46,7 @@ function DetailPage() {
               <div className="row">
                 <div className="col mb-3">
                   <p className="small text-muted mb-1">Date</p>
-                  <p>10 April 2021</p>
+                  <p>{format(new Date(tracks[0].Request.createdAt), 'dd/MM/yyyy HH:mm:ss')}</p>
                 </div>
                 <div className="col mb-3">
                   <p className="small text-muted mb-1">Order No.</p>
