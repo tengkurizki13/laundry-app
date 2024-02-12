@@ -16,5 +16,11 @@
     "password": "ujang",
     "phoneNumber": "081231434",
     "role": "customer"
+  },
+  {
+    "username": "gabi",
+    "password": "gabi",
+    "phoneNumber": "081231434122",
+    "role": "customer"
   }
 ]

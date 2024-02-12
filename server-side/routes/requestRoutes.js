@@ -7,6 +7,6 @@ router.get("/api/requests/:id", RequestController.requestById);
 router.post("/api/requests", RequestController.requestAdd);
 router.delete("/api/requests/:id", RequestController.requestDelete);
 router.put("/api/requests/:id", RequestController.requestUpdate);
-router.patch("/api/requests/:id", RequestController.requestStatusUpdate);
+router.put("/api/requests-status/:id", RequestController.requestStatusUpdate);
 
 module.exports = router;

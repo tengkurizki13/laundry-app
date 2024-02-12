@@ -1,4 +1,4 @@
-const { Request,User } = require("../models");
+const { Request,User,Track } = require("../models");
 
 class RequestController {
   static async requests(req, res, next) {
@@ -31,18 +31,18 @@ class RequestController {
   }
 
   static async requestById(req, res, next) {
-    const { id } = req.params;
-    let option = {
-      include: [
-        {
-          model: User,
-          attributes: {
-            exclude: ["password"],
-          },
-        },
-      ],
-    };
     try {
+      const { id } = req.params;
+      let option = {
+        include: [
+          {
+            model: User,
+            attributes: {
+              exclude: ["password"],
+            },
+          },
+        ],
+      };
       let request = await Request.findByPk(id, option);
 
       if (!request) throw { name: "notFound" };
@@ -71,8 +71,17 @@ class RequestController {
         userId
       });
 
+      let idRequest = Number(newRequest.id)
+      let idPelanggan = Number(userId)
 
-         let request = await Request.findByPk(newRequest.id);
+      await Track.create({
+        userId : idPelanggan,
+        requestId : idRequest,
+        status: "proses"
+      });
+
+
+         let request = await Request.findByPk(idRequest);
       
          res.status(201).json(
            {
@@ -149,24 +158,43 @@ class RequestController {
         status,
       } = req.body;
 
-      let request = await Request.findByPk(id);
+      console.log("sampai sini");
+
+      let option = {
+        include: [
+          {
+            model: User,
+            attributes: {
+              exclude: ["password"],
+            },
+          },
+        ],
+      };
+
+      let request = await Request.findByPk(id,option);
 
       if (!request) throw { name: "notFound" };
 
-      let option = {
+      let option2 = {
             where: { id }
       };
 
       await Request.update({
         status,
-      },option);
+      },option2);
 
+      await Track.create({
+        userId: request.User.id,
+        requestId : request.id,
+        status
+      },option);
 
 
       res.status(200).json({
         massage: `request status success to update`,
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
