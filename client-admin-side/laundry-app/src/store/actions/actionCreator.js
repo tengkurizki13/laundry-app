@@ -4,6 +4,7 @@ import {
   REQUESTS_FETCH_SUCCESS,
   USERS_FETCH_SUCCESS,
   TRACKS_FETCH_SUCCESS,
+  USERS_BY_ID_FETCH_SUCCESS,
 } from "./actionType";
 import Swal from 'sweetalert2';
 
@@ -37,32 +38,46 @@ export const usersFetchSuccess = (payload) => {
   };
 };
 
+export const userByidFetchSuccess = (payload) => {
+  return {
+    type: USERS_BY_ID_FETCH_SUCCESS,
+    payload: payload,
+  };
+};
+
+
 
 
 // fucntions api to server
 
 // this fucntion api get items from server
-export const fetchRequests = () => {
+export const fetchRequests = (filter = "", search = "", startDate = "", endDate = "") => {
   return async (dispatch) => {
     try {
-      // api
-      const response = await fetch(BASE_URL + "/api/requests", {
+      // Membangun URL berdasarkan filter, pencarian, dan rentang waktu
+      let url = BASE_URL + `/api/requests?filter=${filter}&search=${search}`;
+      if (startDate && endDate) {
+        url += `&startDate=${startDate}&endDate=${endDate}`;
+      }
+
+      // Mengirim permintaan GET ke API dengan URL yang dibangun
+      const response = await fetch(url, {
         headers: {
-          access_token : localStorage.getItem('access_token') // Menggunakan token akses yang telah Anda miliki
-        }
+          access_token: localStorage.getItem("access_token"),
+        },
       });
 
-      // contional if error
+      // Jika respons tidak ok, lempar error
       if (!response.ok) throw new Error("upss something wrong");
-      
-      // change data to json
-      let data = await response.json();
 
-      // call other fuction
+      // Mengonversi data respons menjadi JSON
+      const data = await response.json();
+
+      // Memanggil fungsi lain untuk menangani data
       dispatch(requestsFetchSuccess(data.data));
     } catch (error) {
-      // log error
-      console.log(error);
+      // Log error
+      console.error(error);
     }
   };
 };
@@ -100,48 +115,6 @@ export const fetchRequestById = (id) => {
 
 
 // this fucntion api register from server
-export const registerHandler = (form) => {
-  return async (dispatch) => {
-    try {
-      
-      // api
-      const response = await fetch(BASE_URL + "/api/register", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      // change data response to json
-      const data = await response.json();
-
-
-      // contional if error
-      if (!response.ok) throw new Error(data.message);
-
-      // sweet alert
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'register successfully',
-        showConfirmButton: false,
-        timer: 1500
-      })
-    } catch (error) {
-
-      // sweet alert
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error,
-      });
-
-      // dispatch error
-      dispatch(error);
-    }
-  };
-};
 
 export const addRequestHandler = (form) => {
   return async (dispatch) => {
@@ -390,11 +363,11 @@ export const fetchTracks = (id) => {
 };
 
 
-export const fetchUsers = () => {
+export const fetchUsers = (search = "") => {
   return async (dispatch) => {
     try {
       // api
-      const response = await fetch(BASE_URL + "/api/users", {
+      const response = await fetch(BASE_URL + `/api/users?search=${search}`, {
         headers: {
           access_token : localStorage.getItem('access_token') // Menggunakan token akses yang telah Anda miliki
         }
@@ -411,6 +384,162 @@ export const fetchUsers = () => {
     } catch (error) {
       // log error
       console.log(error);
+    }
+  };
+};
+
+export const addUserHandler = (form) => {
+  return async (dispatch) => {
+    try {
+
+      console.log(form);
+      // api
+      const response = await fetch(BASE_URL + "/api/users", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          access_token : localStorage.getItem('access_token')
+        },
+        body: JSON.stringify(form),
+      });
+
+      // change data response to json
+      const data = await response.json();
+
+      // contional if error
+      if (!response.ok) throw new Error(data.message);
+
+      // sweet alert
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "pelanggan berhasil di buat",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      // sweet alert error
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
+
+      // dispatch error
+      dispatch(error);
+    }
+  };
+};
+
+export const deleteUserHandler = (id) => {
+  return async (dispatch) => {
+    try {
+
+      // api
+      const response = await fetch(BASE_URL + "/api/users/" + id, {
+        method: "delete",
+        headers: {
+          access_token : localStorage.getItem('access_token')
+        },
+      });
+
+      // change data response to json
+      const data = await response.json();
+
+      // contional if error
+      if (!response.ok) throw new Error(data.message);
+
+      // sweet alert
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "berhasil menghapus",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      // sweet alert error
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
+
+      // dispatch error
+      dispatch(error);
+    }
+  };
+};
+
+export const fetchUserById = (id) => {
+  return async (dispatch) => {
+    try {
+
+      // api
+      const response = await fetch(BASE_URL + "/api/users/" + id, {
+        headers: {
+          access_token : localStorage.getItem('access_token') // Menggunakan token akses yang telah Anda miliki
+        }
+      });
+      
+      // contional if error
+      if (!response.ok) throw new Error("upss something wrong");
+      
+      // change data to json
+      let data = await response.json();
+
+      console.log(data);
+      
+      // call other fuction
+      dispatch(userByidFetchSuccess(data.data));
+    } catch (error) {
+
+      // log error
+      console.log(error);
+    }
+  };
+};
+
+export const updateUserHandler = (form,id) => {
+  return async (dispatch) => {
+    try {
+      // api
+      const response = await fetch(BASE_URL + "/api/users/" + id, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          access_token : localStorage.getItem('access_token')
+        },
+        body: JSON.stringify(form),
+      });
+
+      // change data response to json
+      const data = await response.json();
+
+      // contional if error
+      if (!response.ok) throw new Error(data.message);
+
+      // sweet alert
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "pelanggan berhasil di update",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      // sweet alert error
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      });
+
+      // dispatch error
+      dispatch(error);
     }
   };
 };

@@ -24,7 +24,12 @@ function Navbar() {
               <div className="navbar-nav" id="nav">
                 <div className="me-3">
                   <Link className="fs-5 fw-bold text-decoration-none text-white" to={"/"}>
-                    Request
+                    Order
+                  </Link>
+                </div>
+                <div className="me-3">
+                  <Link className="fs-5 fw-bold text-decoration-none text-white" to={"/customer"}>
+                    Pelanggan
                   </Link>
                 </div>
               </div>

@@ -1,17 +1,22 @@
 const { User } = require("../models");
+const { Op } = require('sequelize');
 
 class UserController {
   static async users(req, res, next) {
     try {
 
       let option = {
-        order: [["id", "ASC"]],
-        where: {role : 'customer'},
+        order: [["id", "DESC"]],
+        where: {
+          role : 'customer',
+          username: {
+            [Op.like]: `%${req.query.search}%`
+          }
+        },
         attributes: {
             exclude: ["password"],
           },
       };
-
 
       let users = await User.findAll(option);
 

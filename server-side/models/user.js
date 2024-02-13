@@ -37,6 +37,12 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: { msg: "No Whatapp Kosong" },
           notNull: { msg: "No Whatapp Kosong" },
+          isValidPhoneNumber(value) {
+            // Validasi nomor telepon menggunakan regular expression
+            if (isNaN(value)) {
+              throw new Error('Nomor telepon harus berupa angka');
+            }
+          },
         },
       },
       role: {

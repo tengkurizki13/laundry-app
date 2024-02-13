@@ -1,9 +1,10 @@
 const { Request,User,Track } = require("../models");
+const { Op } = require('sequelize');
+const { format } = require("date-fns");
 
 class RequestController {
   static async requests(req, res, next) {
     try {
-
       let option = {
         include: [
           {
@@ -13,19 +14,43 @@ class RequestController {
             },
           },
         ],
-        order: [["id", "ASC"]],
+        order: [["id", "DESC"]],
       };
+  
+      if (req.query.filter) {
+        option.where = {
+          status: req.query.filter
+        };
+      }
+  
+      if (req.query.search) {
+        option.include[0].where = {
+          username: {
+            [Op.like]: `%${req.query.search}%`
+          }
+        };
+      }
 
-
+  
+     // Menambahkan filter waktu jika disediakan
+if (req.query.startDate && req.query.endDate) {
+  option.where = option.where || {}; // Pastikan option.where sudah didefinisikan
+  option.where.createdAt = {
+    [Op.between]: [
+      format(new Date(req.query.startDate), 'yyyy-MM-dd'),
+      format(new Date(req.query.endDate), 'yyyy-MM-dd 23:59:59'),
+    ]
+  };
+}
+  
       let requests = await Request.findAll(option);
-
-
+  
       res.status(200).json({
         message: "all request",
         data: requests,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       next(error);
     }
   }

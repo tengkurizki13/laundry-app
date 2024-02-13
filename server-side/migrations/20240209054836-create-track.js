@@ -34,7 +34,7 @@ module.exports = {
         onUpdate: "cascade",
       },
       status: {
-        type: Sequelize.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
+        type: Sequelize.STRING,
         defaultValue: 'proses', 
       },
       createdAt: {

@@ -7,6 +7,9 @@ import DetailPage from "./pages/DetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import FormAddPage from "./pages/FormAddPage.jsx";
 import FormEditPage from "./pages/FormEditPage.jsx";
+import CustomerPage from "./pages/CustomerPage.jsx";
+import FormAddCustomerPage from "./pages/FormAddCustomerPage.jsx";
+import FormEditCustomerPage from "./pages/FormEditCustomerPage.jsx";
 
   const router = createBrowserRouter([
     {
@@ -48,6 +51,19 @@ import FormEditPage from "./pages/FormEditPage.jsx";
                 },
             },
             {
+              path:"/customer",
+              element: <CustomerPage />,
+              loader: async () => {
+                // check token
+                if (!localStorage.access_token) {
+                  // rediretn to login
+                    return redirect("/login")
+                }else{
+                    return null
+                }
+              },
+          },
+            {
               path:"/requests/:id",
               element: <DetailPage />,
               loader: async () => {
@@ -76,6 +92,32 @@ import FormEditPage from "./pages/FormEditPage.jsx";
             {
               path:"/form-edit/:id",
               element: <FormEditPage />,
+              loader: async () => {
+                // check token
+                if (!localStorage.access_token) {
+                  // redirect to login
+                    return redirect("/login")
+                }else{
+                    return null
+                }
+              },
+            },
+            {
+              path:"/form-add-customer",
+              element: <FormAddCustomerPage />,
+              loader: async () => {
+                // check token
+                if (!localStorage.access_token) {
+                  // redirect to login
+                    return redirect("/login")
+                }else{
+                    return null
+                }
+              },
+            },
+            {
+              path:"/form-edit-customer/:id",
+              element: <FormEditCustomerPage />,
               loader: async () => {
                 // check token
                 if (!localStorage.access_token) {

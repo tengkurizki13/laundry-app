@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
+        type: Sequelize.STRING,
         defaultValue: 'proses', 
       },
       userId: {

@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
       },
       status: {
-        type: DataTypes.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','selesai'),
+        type: DataTypes.STRING,
         defaultValue: "proses",
       },
   }, {
