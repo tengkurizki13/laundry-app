@@ -42,6 +42,7 @@ if (req.query.startDate && req.query.endDate) {
     ]
   };
 }
+
   
       let requests = await Request.findAll(option);
   

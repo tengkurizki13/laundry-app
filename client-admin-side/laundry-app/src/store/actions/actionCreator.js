@@ -310,7 +310,9 @@ export const loginHandler = (form) => {
 
 
       // set localstore
+
       localStorage.setItem("access_token", data.data.access_token);
+      localStorage.setItem("role", data.data.role);
 
       // sweet alert
       Swal.fire({
@@ -540,6 +542,45 @@ export const updateUserHandler = (form,id) => {
 
       // dispatch error
       dispatch(error);
+    }
+  };
+};
+
+
+export const fetchRequestsOwner = (startDate = "", endDate = "") => {
+  return async (dispatch) => {
+    try {
+      // Membangun URL berdasarkan filter, pencarian, dan rentang waktu
+
+      console.log(startDate,endDate);
+
+
+      let url = BASE_URL + `/api/requests-owner?`;
+      if (startDate && endDate) {
+        url += `startDate=${startDate}&endDate=${endDate}`;
+      }
+
+      // Mengirim permintaan GET ke API dengan URL yang dibangun
+      const response = await fetch(url, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      });
+
+      
+      // Jika respons tidak ok, lempar error
+      if (!response.ok) throw new Error("upss something wrong");
+
+      // Mengonversi data respons menjadi JSON
+      console.log(response);
+      const data = await response.json();
+
+
+      // Memanggil fungsi lain untuk menangani data
+      dispatch(requestsFetchSuccess(data.data));
+    } catch (error) {
+      // Log error
+      console.error(error);
     }
   };
 };

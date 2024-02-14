@@ -20,7 +20,7 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
-const [endDate, setEndDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   // function page reload first time and once
   useEffect(() => {
     dispatch(fetchRequests())
@@ -46,11 +46,18 @@ const [endDate, setEndDate] = useState(null);
 
   function handleChangeStatus(id,e){
     // Mengubah status dalam state data
-
-   let data = {
-    status : e.target.value
-   }
-
+    Swal.fire({
+      title: "Kamu yakin Merubah status?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ya, rubah!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+         let data = {
+          status : e.target.value
+         }
     dispatch(updateStatusRequestHandler(data,id))
     .then(() => {
       dispatch(fetchRequests())
@@ -58,6 +65,13 @@ const [endDate, setEndDate] = useState(null);
         setLoading(false)
       })
     })
+        Swal.fire({
+          title: "berhasil Membayar!",
+          text: "Order Mu berhasil dibayar",
+          icon: "success"
+        });
+      }
+    });
 }
 
 function handleFilter(key) {
@@ -255,15 +269,15 @@ function handleSubmit(event) {
              
                   <td>
               {request.status === 'selesai' ? (
-                  <button className='btn btn-success me-3' onClick={() => {changePageToDetail(request.id)}}><i className="bi bi-check2-all"></i> Selesai</button>
+                  <button className='btn btn-success me-3'><i className="bi bi-check2-all"></i> Selesai</button>
                  ) : request.status === 'pembayaran' ? (
                       <button className='btn btn-primary me-3' onClick={() => {handleCheckout(request.id)}}><i className="bi bi-wallet2"></i> checkout</button>
                     ) : 
                               <>
                               <button className='btn btn-warning me-3' onClick={() => {changePageToForm("edit",request.id)}}><i className="bi bi-pencil"></i></button>
-                              <button className='btn btn-secondary me-3' onClick={() => {changePageToDetail(request.id)}}><i className="bi bi-ticket-detailed" ></i></button>
                               </>  
                             }
+                            <button className='btn btn-secondary me-3' onClick={() => {changePageToDetail(request.id)}}><i className="bi bi-ticket-detailed" ></i></button>
                             <button className='btn btn-danger me-3' onClick={() => handleDelete(request.id)}><i className="bi bi-trash"></i></button>
                               </td>
             

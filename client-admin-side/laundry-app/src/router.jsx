@@ -2,7 +2,8 @@ import {
     createBrowserRouter,redirect
   } from "react-router-dom";
 import App from "./App.jsx";
-import HomePage from "./pages/HomePage.jsx";
+import HomeAdminPage from "./pages/HomeAdminPage.jsx";
+import HomeOwnerPage from "./pages/HomeOwnerPage.jsx";
 import DetailPage from "./pages/DetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import FormAddPage from "./pages/FormAddPage.jsx";
@@ -39,17 +40,40 @@ import FormEditCustomerPage from "./pages/FormEditCustomerPage.jsx";
         children:[
             {
                 path:"/",
-                element: <HomePage />,
+                element: <HomeAdminPage />,
                 loader: async () => {
                   // check token
                   if (!localStorage.access_token) {
                     // rediretn to login
                       return redirect("/login")
                   }else{
+                    if (localStorage.role === "owner") {
+                      return redirect("/dashboard")
+                    }else{
                       return null
+                    }
                   }
                 },
             },
+            {
+              path:"/dashboard",
+              element: <HomeOwnerPage />,
+              loader: async () => {
+                // check token
+                if (!localStorage.access_token) {
+                  // rediretn to login
+
+                
+                    return redirect("/login")
+                }else{
+                  if (localStorage.role === "admin") {
+                    return redirect("/")
+                  }else{
+                    return null
+                  }
+                }
+              },
+          },
             {
               path:"/customer",
               element: <CustomerPage />,

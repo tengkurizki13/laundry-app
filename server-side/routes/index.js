@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userRoutes = require("./userRoutes");
+const ownerRoutes = require("./ownerRoutes");
 const authRoutes = require("./authRoutes");
 const requestRoutes = require("./requestRoutes");
 const trackRoutes = require("./trackRoutes");
@@ -14,6 +15,7 @@ router.use(authRoutes);
 router.use(authentication);
 router.use(userRoutes);
 router.use(requestRoutes);
+router.use(ownerRoutes);
 router.use(trackRoutes);
 
 const errorHandler = (error, req, res, next) => {

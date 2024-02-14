@@ -52,13 +52,13 @@ function handleSubmit(event) {
 
   function handleDelete(id){
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "kamu yakin?",
+      text: "kamu mau menghapus customer",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonText: "ya, hapus!"
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteUserHandler(id))
@@ -70,8 +70,8 @@ function handleSubmit(event) {
         })
         console.log(id);
         Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
+          title: "terhapus!",
+          text: "Kamu berhasil menghapus",
           icon: "success"
         });
       }
@@ -79,7 +79,6 @@ function handleSubmit(event) {
    
   }
 
-  console.log(users,"ori");
 
   // contional if data not relode yet
   if (loading) {

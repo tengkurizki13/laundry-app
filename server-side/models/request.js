@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       status: {
-        type: DataTypes.ENUM('proses','penimbangan','pencucian','pengeringan','pengemasan','pembayaran','selesai'),
+        type: DataTypes.STRING,
         defaultValue: "proses",
       },
       userId: {

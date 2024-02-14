@@ -1,6 +1,35 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+
 
 function Navbar() {
+
+
+  
+
+const navigate = useNavigate();
+
+function handleLogout(){
+  Swal.fire({
+    title: "Kamu yakin?",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "ya, keluar!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      navigate("/login")
+      localStorage.clear()
+
+      Swal.fire({
+        title: "berhasil keluar!",
+        icon: "success"
+      });
+    }
+  });
+ 
+}
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-primary">
@@ -36,10 +65,7 @@ function Navbar() {
             </div>
             {/* Menggunakan ms-auto untuk menggeser link ke kanan */}
             <div className="ms-auto">
-            <i className="bi bi-box-arrow-right"></i> 
-              <Link className="fs-5 fw-bold text-decoration text-secondary" to={"/logout"}>
-                 Logout
-              </Link>
+             <button className="btn btn-danger" onClick={handleLogout}> <i className="bi bi-box-arrow-right"></i>  Keluar</button>
             </div>
           </div>
         </div>

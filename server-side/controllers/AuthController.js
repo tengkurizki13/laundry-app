@@ -44,8 +44,6 @@ class AuthController {
           message: "User has been logged in",
           data : {
             access_token: payload,
-            id: user.id,
-            username: user.username,
             role: user.role,
           }
         },
